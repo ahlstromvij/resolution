@@ -27,3 +27,6 @@ vignettes/*.pdf
 # R Environment Variables
 .Renviron
 .DS_Store
+# Markdown files
+No-bang-for-your-buck_files
+No-bang-for-your-buck.tex
