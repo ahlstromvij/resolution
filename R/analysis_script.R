@@ -132,10 +132,34 @@ all_data %>%
   summarise(mean = mean(urn),
             sd = sd(urn))
 
+# visualise estimate distribution
 all_data %>% 
-  group_by(condition) %>% 
-  summarise(mean = mean(vaccination),
-            sd = sd(vaccination))
+  mutate(condition = dplyr::recode(condition,
+                            "external" = "External resolution",
+                            "no_res" = "Control",
+                            "self_res" = "Self-resolution")) %>% 
+  ggplot() +
+  aes(x = condition, y = urn, fill = condition) +
+  geom_violin() +
+  geom_jitter(alpha = 0.2) +
+  xlab("Condition") +
+  ylab("Estimate (%)") +
+  theme_minimal() +
+  theme(legend.position = "none")
+
+all_data %>% 
+  mutate(condition = dplyr::recode(condition,
+                                   "external" = "External resolution",
+                                   "no_res" = "Control",
+                                   "self_res" = "Self-resolution")) %>% 
+  ggplot() +
+  aes(x = condition, y = vaccination, fill = condition) +
+  geom_violin() +
+  geom_jitter(alpha = 0.2) +
+  xlab("Condition") +
+  ylab("Estimate (%)") +
+  theme_minimal() +
+  theme(legend.position = "none")
 
 # significantly different?
 all_data$condition <- as.factor(all_data$condition)
@@ -168,17 +192,6 @@ library(multcomp)
 m_vaccination.multcomp <- glht(m_vaccination, linfct = mcp(condition = "Tukey") , vcov = m_vaccination_vcov)
 summary(m_vaccination.multcomp,test = adjusted("holm"))
 
-# visualize distribution
-all_data %>% 
-  ggplot() +
-  aes(x = condition, y = urn) +
-  geom_violin()
-
-all_data %>% 
-  ggplot() +
-  aes(x = condition, y = vaccination) +
-  geom_violin()
-
 # mean error by condition
 all_data$urn_error <- abs(all_data$urn - 70)
 
@@ -195,7 +208,7 @@ all_data %>%
 
 # clear that some went for 50%, principle of indifference
 # but about same proportion across conditions, so can ignore
-all_data %>%
+test <- all_data %>%
   mutate(princ_of_diff = ifelse(urn == 50, 1, 0)) %>%
   group_by(condition) %>% 
   count(princ_of_diff) %>% 
@@ -542,3 +555,5 @@ ggplot(plot_tosts[3:4,], aes(x=condition, y=difference, group=condition, color=c
   theme(panel.grid.major = element_line(linetype = "dashed")) +
   theme(panel.grid.minor = element_line(linetype = "dashed")) +
   theme(plot.title = element_text(face = "bold"))
+
+write_csv(all_data, "data/all_data.csv")
