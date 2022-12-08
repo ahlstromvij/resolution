@@ -19,10 +19,6 @@ sum(is.na(all_data$vaccination))
 remove <- which(is.na(all_data$vaccination))
 all_data <- all_data[-remove,]
 
-# 5c193c721a7b3e0001bb298a didn't see the picture of the sampled balls in the external condition
-# which(all_data$prolific_id=="5c193c721a7b3e0001bb298a")
-# all_data <- all_data[-c(which(all_data$prolific_id=="5c193c721a7b3e0001bb298a")),]
-
 # comprehension
 all_data$comprehension <- NA
 all_data$comprehension[all_data$condition=="external" & 
