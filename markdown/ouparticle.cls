@@ -39,6 +39,7 @@
 \long\def\name#1{#1\\}
 \long\def\address#1{#1\\}
 \long\def\email#1{#1\\}
+\long\def\phone#1{#1\\}
 
 \if@twoside
   \def\ps@headings{%
